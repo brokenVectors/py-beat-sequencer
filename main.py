@@ -16,12 +16,8 @@ pygame.display.set_caption("Beat Sequencer")
 clock = pygame.time.Clock()
 screen = pygame.display.set_mode(screen_size)
 sequencer = Sequencer(row_count, col_count, square_size, clock)
-fonts = pygame.font.get_fonts()
-print(len(fonts))
-for f in fonts:
-    print(f)
 font = pygame.font.SysFont("arialunicode", 24)
-img = font.render('''↑: +5 BPM          ↓: -5 BPM         SPACE: Play/Pause''', True, (255,255,255))
+help_text = font.render('''↑: +5 BPM          ↓: -5 BPM         SPACE: Play/Pause''', True, (255,255,255))
 
 while running:
     for event in pygame.event.get():
@@ -46,7 +42,7 @@ while running:
             sequencer.play_col()
     screen.fill((0, 0, 0))
     sequencer.draw(screen)
-    screen.blit(img, (0, square_size * row_count))
+    screen.blit(help_text, (0, square_size * row_count))
     pygame.display.flip()
     clock.tick(60)
 
