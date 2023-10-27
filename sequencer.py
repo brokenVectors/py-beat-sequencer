@@ -39,8 +39,9 @@ class Sequencer:
     def draw(self, surface):
         for row in range(0, self.row_count):
             for col in range(0, self.col_count):
-                if self.get(row, col) == 1:
-                    color = row_colours[row]
+                value = self.get(row, col)
+                if value > 0:
+                    color = (row_colours[row][0] * value, row_colours[row][1] * value, row_colours[row][2] * value)
                 elif col % 4 == 0:
                     color = (20, 20, 20)
                 else:
@@ -50,7 +51,9 @@ class Sequencer:
                 pygame.draw.rect(surface, color, pygame.Rect(col*self.square_size,row*self.square_size,self.square_size,self.square_size))
     def play_col(self):
         for row in range(0, self.row_count):
-            if self.get(row, self.col_location) == 1:
+            value = self.get(row, self.col_location)
+            if value > 0:
+                self.row_sounds[row].set_volume(1.0 * value)
                 self.channels[row].play(self.row_sounds[row])
         if self.col_location < self.col_count - 1:
             self.col_location = self.col_location + 1
@@ -58,10 +61,10 @@ class Sequencer:
             self.col_location = 0
     def play(self):
         self.playing = True
-        #pygame.time.set_timer(BEATEVENT, int(250/(self.tempo/60)))
     def stop(self):
         self.playing = False
-        #pygame.time.set_timer(BEATEVENT, 0)
     def set_tempo(self, tempo):
         self.tempo = tempo
         self.play()
+    def set_swing_percentage(self, swing):
+        self.swing_percentage = swing
