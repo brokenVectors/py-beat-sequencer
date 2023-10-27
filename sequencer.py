@@ -1,6 +1,5 @@
 import numpy as np
 import pygame
-BEATEVENT = pygame.USEREVENT+1
 row_colours = [
     (234, 196, 53),
     (52, 89, 149),
@@ -9,7 +8,6 @@ row_colours = [
 ]
 def clamp(n, smallest, largest): return max(smallest, min(n, largest))
 class Sequencer:
-    # TODO: Add Swing percentage. Unfortunately set_timer is a consistent interval so I'll have to find another way
     # TODO: Make a version of the beat sequencer with a basic piano roll
     # TODO: Add an export feature (use the wave module)
     def __init__(self, row_count, col_count, square_size, clock, tempo=120):
@@ -19,6 +17,7 @@ class Sequencer:
         self.col_count = col_count
         self.col_location = 0
         self.tempo = 120
+        self.swing_percentage = 90
         self.clock = clock
         self.beats = np.zeros([row_count, col_count])
         self.row_sounds = [
@@ -59,10 +58,10 @@ class Sequencer:
             self.col_location = 0
     def play(self):
         self.playing = True
-        pygame.time.set_timer(BEATEVENT, int(250/(self.tempo/60)))
+        #pygame.time.set_timer(BEATEVENT, int(250/(self.tempo/60)))
     def stop(self):
         self.playing = False
-        pygame.time.set_timer(BEATEVENT, 0)
+        #pygame.time.set_timer(BEATEVENT, 0)
     def set_tempo(self, tempo):
         self.tempo = tempo
         self.play()

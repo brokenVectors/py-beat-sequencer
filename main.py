@@ -1,7 +1,6 @@
 import pygame
 from math import *
 from sequencer import Sequencer
-from sequencer import BEATEVENT
 
 running = True
 square_size = 50
@@ -19,6 +18,7 @@ sequencer = Sequencer(row_count, col_count, square_size, clock)
 font = pygame.font.SysFont("arialunicode", 24)
 help_text = font.render('''↑: +5 BPM          ↓: -5 BPM         SPACE: Play/Pause''', True, (255,255,255))
 
+delta_time = 0
 while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -38,8 +38,14 @@ while running:
                     sequencer.stop()
                 else:
                     sequencer.play()
-        elif event.type == BEATEVENT:
-            sequencer.play_col()
+    time_to_elapse = int(250/(sequencer.tempo/60))
+    if sequencer.col_location % 2 == 1:
+        time_to_elapse = time_to_elapse + time_to_elapse * (sequencer.swing_percentage / 100)
+    if delta_time < time_to_elapse:
+        delta_time += clock.get_time()
+    elif sequencer.playing:
+        sequencer.play_col()
+        delta_time = 0
     screen.fill((0, 0, 0))
     sequencer.draw(screen)
     screen.blit(help_text, (0, square_size * row_count))
